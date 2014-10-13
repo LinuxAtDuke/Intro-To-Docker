@@ -9,6 +9,8 @@ RUN yum clean all
 
 ADD https://upload.wikimedia.org/wikipedia/commons/e/ee/Grumpy_Cat_by_Gage_Skidmore.jpg /var/www/html/grumpycat.jpg
 
+RUN echo "Redirect ^/doge /grumpy/doge.jpg" > /etc/httpd/conf.d/redirect.conf
+
 VOLUME ["/var/www/html"]
 
 EXPOSE 80
