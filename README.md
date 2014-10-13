@@ -383,6 +383,175 @@ In this lab, you'll examine a Dockerfile that has a few of the commands used abo
 5. Build the grumpycat image from this Dockerfile.
 6. Examine your image list to confirm the image is there.
 
+<a name='unit5'></a>
+## Unit 5: More Docker Run Flags
+
+The `docker run` command has a lot of flags, and can get really complicated once you start naming and linking containers, mounting volumes back and fourth, etc. Here are a few more basic flags you will probably use regularly, though.
+
+**--rm=true**
+
+The `--rm=true` option will remove your container from the host when it stops running.  It is only available if you run your Docker container interactively (`-it`), and not in detached mode (`-d`).
+
+**-v <host volume>:<container volume>**
+
+The `-v` flag allows you to mount a volume from inside your container (that has been specified with the `VOLUME` instruction in the Dockerfile, remember) to a volume on your host.
+
+*Example:*
+
+`docker run -it -v /tmp/my-volume:/var/www/html centos touch /var/www/html/test.txt` will mount /tmp/my-volume on your host (creating it if it doesn't exist) into /var/www/html on the container.  The command (touch /var/www/html/test.txt) then creates a test.txt file, which you would be able to see in /tmp/my-volume.
+
+**--name <name>**
+
+The `--name` flag lets you assign a specific name to your container, rather than assigning a random one to it.  This helps when you want to link containers, or just to make them easier to identify.  You can only have one container with a specific name, though, even if it's no longer running.
+
+*Example:*
+
+`docker run -it --name MyAwesomeContainer centos /bin/echo Hello!`
+
+**-P**
+
+The `-P` flag is similar to the `-p` flag, but it publishes ALL ports on the container (that are specified by the EXPOSE instruction in the Dockerfile), and maps them to random ports on your host.
+
+<a name='lab5'></a>
+## Lab 5: Run a More Complicated Container 
+
+1. Using the grumpycat image you built in the last lab, start a grumpycat container
+  * Run it interactively with a pseudo-TTY (terminal)
+  * Make sure it removes itself when it stops
+  * Map port 8081 of your host VM to port 80 in the container
+  * Mount ~/grumpy of your host VM as /var/www/html/grumpy
+  * Name your new container "my_grumpy_cat"
+  * Override the CMD line in the Dockerfile, and tell the contianer to run "/bin/bash" instead
+2. What happend when you ran your contianer?
+3. Inside the container, start the webserver: `/usr/sbin/httpd &`
+4. Use a new command: CTRL+p CTRL+q (Control p, control q) to detach from your container, leaving it running.
+5. Open a browser and navigate to your VM, port 8081: http://*your_vm_name*:8081
+6. Copy Intro-To-Docker/grumpycat/doge.jpg into ~/grumpy
+7. Open a browser and navigate to your VM, port 8081: http://*your_vm_name*:8081/doge
+
+<a name='unit6'></a>
+## Unit 6: Image and Container Management
+
+This is where we get into some commands that will help you manage you images and containers, get more information about them, and remove them if you want.  As before, let's start with images.
+
+You already know how to see your images, using the `docker images` command, and you know how to download new images from the Docker Registry with `docker pull`.  You also know how to build images with `docker build`.  Let's learn a few more:
+
+**docker rmi <name>**
+
+The `docker rmi` command removes (deletes) images.  You can specify the image by it's NAME, it's NAME:TAG, or it's IMAGE ID.
+
+**docker tag <image> <image>:<tagname>**
+
+We have talked about tagging before.  Tags are like symlinks, sort of.  You can tag an image with another name using `docker tag <image> <image>:<tagname>`.  This is usually used for version control, tagging "latest" to a particular build, and updating it when the build changes.  (Remember the base images, or WordPress?)
+
+*Example:*
+
+     docker images 
+     REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
+     fsm                 latest              06c25cda9581        3 hours ago         451.4 MB
+
+     docker tag fsm fsm:2014
+     docker images
+     REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
+     fsm                 latest              06c25cda9581        3 hours ago         451.4 MB
+     fsm                 2014                06c25cda9581        3 hours ago         451.4 MB
+
+**docker inspect <image> / docker inspect <container>**
+
+The `docker inspect` command allows you to specify an image OR a container, and returns a JSON formatted list of attributes.  It's someone less userfriendly, but provides *a lot* of infomration about the image or container.  This is very useful  for troubleshooting (and is really useful if you ever get into using the Docker API).
+
+*Example:*
+
+    docker inspect 4c68cd64d2a 
+    [{
+    "Architecture": "amd64",
+    "Author": "",
+    "Comment": "",
+    "Config": {
+        "AttachStderr": false,
+        "AttachStdin": false,
+        "AttachStdout": false,
+        "Cmd": [
+            "apache2",
+            "-DFOREGROUND"
+        ],
+        "CpuShares": 0,
+        "Cpuset": "",
+        "Domainname": "",
+        "Entrypoint": [
+            "/entrypoint.sh"
+        ],
+        "Env": [
+            "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+     
+    ...
+
+Now we can move on to managing containers.  You already know how to run a container with `docker run`.
+
+**docker ps**
+
+The `docker ps` command shows a list of all the running containers on the host.  Here you can see the container ID, the image it was started from, the command it's running, when it was created, it's current status, any ports that are mapped, and any names that have been assigned.
+
+*Example:*
+
+    docker ps
+    CONTAINER ID        IMAGE               COMMAND                CREATED             STATUS              PORTS                  NAMES
+    c38e504f2716        grumpycat:latest    /usr/sbin/httpd -DFO   31 minutes ago      Up 31 minutes       0.0.0.0:8080->80/tcp   trusting_meitner    
+
+**docker ps -a**
+
+Adding the `-a` flag to `docker ps` will show you a list of *all* the containers on the host, including those that have stopped.
+
+*Example:*
+
+    docker ps -a
+    CONTAINER ID        IMAGE               COMMAND                CREATED             STATUS                      PORTS                  NAMES
+    c38e504f2716        grumpycat:latest    /usr/sbin/httpd -DFO   34 minutes ago      Up 34 minutes               0.0.0.0:8080->80/tcp   trusting_meitner    
+    6a3ccf4ca3a3        896447f597d6        /usr/sbin/httpd -DFO   35 minutes ago      Exited (0) 34 minutes ago                          naughty_torvalds    
+    a2f4de40310e        63c840f565f3        /usr/sbin/httpd -DFO   43 minutes ago      Exited (0) 35 minutes ago                          happy_morse     
+
+**docker stop <container>**
+
+The `docker stop` command will stop a running container, gracefully sending a SIGTERM to the command that container is running.
+
+**docker kill <container>**
+
+The `docker kill` command is similar to `docker stop`, but it's more forceful, sending a SIGKILL to the command the container is running.  This should be avoided if possible - it can cause some strange issues with Docker.
+
+**docker rm <container>**
+
+The `docker rm` command is like the `docker rmi` command, and removes (deletes) a container.  This is good to do to containers you are no longer using, to clean up space.
+
+**docker attach <container>**
+
+The `docker attach` command will allow you to attach to a container that's already running, but not attached.  This is most useful when attaching to a container that has a TTY (terminal) allocated (such as when you run /bin/bash as the containers CMD).  It's less helpful when there's not TTY present.
+
+**CTRL+p CTRL+q**
+
+Typing `CTRL+p CTRL+q` while you are inside a running container (ie: one that you started interactively, or one that you've attached to) will detach you from that container, leaving it running.
+
+**docker logs <container>**
+
+The `docker logs` command will show you anything written to STDOUT by the command running inside your container.  Because of this, it's advantagous to send STDERR to STDOUT as well, if you're not already logging it somewhere that you can get to.
+
+<a name='lab6'></a>
+## Lab 6: Cleanup!
+
+Using the commands you learned in Unit 6:
+
+1. Show any running containers you have on your host
+2. Stop all of the running containers
+3. Show all the containers, including the stopped ones, on your host
+4. Remove all the stopped containers
+5. Run a new container, interactively, from the base image.  Make "/bin/bash" the command.
+6. Detatch from the running container.
+7. Inspect the running container.  What is it's IP Address?  What is it's Hostname?
+8. Stop the running image, and remove it.
+9. Show all of your images.
+10. Tag your grumpycat image (or whatever you called it) with today's date
+11. Remove all the Full Screen Mario images
+12. Remove any images with the name \<none\>.  What do you think these are?
+
 ---
 
 ![Creative Commons CC0 1.0 License](http://i.creativecommons.org/p/zero/1.0/88x31.png)
