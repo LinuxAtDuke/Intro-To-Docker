@@ -289,7 +289,7 @@ In this lab, you're going to run a container from the Full Screen Mario image yo
     * Detached
     * Map your VMs port 8080 to the container's port 80
     * No command is necessary (Look at the Dockerfile - can you tell why?)
-3. Open a browser and navigate to your VM, port 8080: http://\<YOUR VM NAME\>:8080
+3. Open a browser and navigate to your VM, port 8080: http://*YOUR VM NAME*:8080
 
 ---
 
