@@ -1,5 +1,5 @@
-Introduction to Docker: \"Do Your Own Docker\"
-==============================================
+Introduction to Docker: "Do Your Own Docker"
+============================================
 
 *Version 1.0 - 20141013
 
@@ -289,10 +289,9 @@ In this lab, you're going to run the Full Screen Mario container you built in th
     * No command is necessary (Look at the Dockerfile - can you tell why?)
 3. Open a browser and navigate to your VM, port 8080: http://\<YOUR VM NAME\>:8080
 
-
 ---
 
 ![Creative Commons CC0 1.0 License](http://i.creativecommons.org/p/zero/1.0/88x31.png)
 
-To the extent possible under law, [Linux@Duke](https://github.com/LinuxAtDuke) has waived all copyright and related or neighboring rights to *Introduction To Linux*.  This work published from: United States.
+To the extent possible under law, [Linux@Duke](https://github.com/LinuxAtDuke) has waived all copyright and related or neighboring rights to *Introduction To Docker*.  This work published from: United States.
 
