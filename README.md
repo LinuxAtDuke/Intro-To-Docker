@@ -20,9 +20,9 @@ Chris Collins
 9. [Unit 4: More Dockerfile Instructions ](#unit4)
 10. [Lab 4: Examine a More Complicated Dockerfile](#lab4)
 11. [Unit 5: More Docker Run Flags](#unit5)
-12. [Lab 5: Run a More Complicated Container](#lab4)
+12. [Lab 5: Run a More Complicated Container](#lab5)
 13. [Unit 6: Image and Container Management](#unit6)
-14. [Lab 6: Cleanup!](#unit7)
+14. [Lab 6: Cleanup!](#lab6)
 
 <a name='unit0'></a>
 ## What Is Docker?
