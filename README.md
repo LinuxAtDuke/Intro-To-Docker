@@ -27,7 +27,18 @@ Chris Collins
 <a name='unit0'></a>
 ## What Is Docker?
 
-If you go to the Docker website, [https://docs.docker.com](https://docs.docker.com), you'll see a dozen paragraphs explaining what Docker can do and how different techie folks can use it.  It's worth a read, but when it comes down to it, Docker is really just **containers that run commands**.
+If you go to the Docker website, [https://docs.docker.com](https://docs.docker.com), you'll see a dozen paragraphs explaining what Docker can do and how different techie folks can use it.  It's worth a read, but when it comes down to it, Docker is really just **containers that run commands** and **images that make containers**.
+
+Docker uses LXC (LinuX Containers) as a way to run multiple isolated Linux systems on a single host. This uses cgroups to isloate resources and namespaces to make sure each virtual system is as isolated as possible from the host and other containers.  LXC and cgroups are built into the Linux kernel, so you can do all of this without Docker, but Docker provides an nice, human-friendly interface for this technology.
+
+You don't need to know all about the LXC or cgroups stuff to use Docker, but it's interesting stuff, if you're curious.  All you need to know for this class is that Docker containers are tiny, efficient virtual servers that run in their own bubble inside a host server.
+
+*Further Reading:*
+
+1. Docker: [https://www.docker.com](https://www.docker.com)
+2. LXC: [https://en.wikipedia.org/wiki/LXC](https://en.wikipedia.org/wiki/LXC)
+3. cgroups: [https://en.wikipedia.org/wiki/Cgroups](https://en.wikipedia.org/wiki/Cgroups)
+
 
 <a name='lab0'></a>
 ## Lab 0: Creating a personal Linux VM and Installing Docker
@@ -188,13 +199,13 @@ That's it!  Pretty simple.   Let's break it down a little:
 
 The first two lines, the ones beginning with "#" - are just comments.  They're not required, but it's nice to put some identifying information in there so you, or anyone you share your Dockerfile with, has an idea of what to expect.
 
-The `FROM` line specifies which base image your image is built on.  It's generally a good idea to be specific here.
+The `FROM` instruction specifies which base image your image is built on.  It's generally a good idea to be specific here.
 
-The `MAINTAINER` line specifies who created and maintains the image.  This should always be you or your group, if you're working with others on the image.  I like to add my email address as well, in case anyone has any questions about the image.
+The `MAINTAINER` instruction specifies who created and maintains the image.  This should always be you or your group, if you're working with others on the image.  I like to add my email address as well, in case anyone has any questions about the image.  This is actually built into the image itself, too.
 
-The From and Maintainer lines are the only required lines in an image.
+The From and Maintainer instruction are the only required lines in an image.
 
-The last line, `CMD`, specifies the command to run immediately when a container is started from this image, unless you specify a different command.  In this case, the container started from this image will echo "Hello, World" and then exit.
+The last instruction, `CMD`, specifies the command to run immediately when a container is started from this image, unless you specify a different command.  In this case, the container started from this image will echo "Hello, World" and then exit.
 
 To build the "helloworld" image, you need the Dockerfile.  You can write your own, or copy-and-paste it, but the easiest way is to clone it from a Github repository.  Obviously, you'll need **git** installed to do this (`sudo apt-get install git`).
 
@@ -290,6 +301,85 @@ In this lab, you're going to run a container from the Full Screen Mario image yo
     * Map your VM's port 8080 to the container's port 80
     * No command is necessary (Look at the Dockerfile - can you tell why?)
 3. Open a browser and navigate to your VM, port 8080: http://*your_vm_name*:8080
+
+## Unit 4: More Dockerfile Instructions 
+
+Earlier, we learned about the FROM, MAINTAINER and CMD instructions, but there are more instructions available to use inside a Dockerfile.  Each instruction that is listed is saved as another layer, or intermediate image (remember those?) 
+
+Here are a few more common instructions:
+
+**ADD**
+
+The ADD instruction will copy new files from a source and add them to the containers filesystem path.  The source is usually relative to the Dockerfile:
+
+*Example:*
+
+    ADD helloworld.txt  /srv/helloworld.txt
+
+This copies a helloworld.txt file from the same directory as the Dockerfile into /srv/helloworld.txt inside the container.
+
+The ADD instruction can also take a URL as the source:
+
+*Example:*
+
+    ADD https://upload.wikimedia.org/wikipedia/commons/e/ee/Grumpy_Cat_by_Gage_Skidmore.jpg /srv/grumpycat.jpg
+
+This ADD instruction will copy the image of Grumpy Cat from Wikimedia and put it inside the container as /srv/grumpycat.jpg
+
+The ADD instruction will also unpack an archive in a support format:
+
+    ADD https://wordpress.org/latest.tar.gz /var/www/html
+
+This ADD instruction will download and unpack the WordPress source code into /var/www/html inside the container.
+
+**RUN**
+
+The RUN instruction does just that:  It runs a command inside the container.
+
+*Example:*
+
+    RUN yum install -y git
+
+This RUN instruction will rum `yum install -y git` inside the container, installing the git program.
+
+**EXPOSE**
+
+The EXPOSE instruction tells Docker that the container will listen on the specified port when it starts.
+
+*Example:*
+
+    EXPOSE 80
+    EXPOSE 443
+
+These two EXPOSE instructions tell Docker that the container will listen to the web ports (80 and 443) when it runs. 
+
+**VOLUME**
+
+The VOLUME instruction will create a mount point with the specified name and tell Docker that the volume may be mounted by the host, or other containers.
+
+*Example:*
+
+    VOLUME ["/var/www/html"]
+
+This VOLUME instruction make the /var/www/html directory inside the contianer available to be mounted by the host, or other linked contianers.
+
+## Lab 4: Examine a More Complicated Dockerfile
+
+In this lab, you'll examine a Dockerfile that has a few of the commands used above, and then build the image.
+
+1. You should have already cloned the Intro-To-Docker repo when you looked at the "helloworld" Dockerfile.  If you haven't:
+  * `git clone git clone https://github.com/LinuxAtDuke/Intro-To-Docker.git`
+2. Change directories to the "grumpycat" directory.
+3. Examine the Dockerfile inside:
+  * What does the ADD instruction do here?
+  * What does the RUN instruction do here?
+  * What does the EXPOSE instruction do here?
+  * What does the VOLUME instruction do here?
+  * What does the CMD instruction do here?
+  * What do you think the container will do when you run it?
+4. For the purposes of this class, I am confirming you can trust this Dockerfile (SECURITY!)
+5. Build the grumpycat image from this Dockerfile.
+6. Examine your image list to confirm the image is there.
 
 ---
 
