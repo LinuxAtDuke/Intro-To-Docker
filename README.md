@@ -287,7 +287,7 @@ In this lab, you're going to run a container from the Full Screen Mario image yo
 1. Examine your images, and note what you called the Full Screen Mario image.
 2. Run the Full Screen Mario image, with the following options:
     * Detached
-    * Map your VMs port 8080 to the container's port 80
+    * Map your VM's port 8080 to the container's port 80
     * No command is necessary (Look at the Dockerfile - can you tell why?)
 3. Open a browser and navigate to your VM, port 8080: http://*your_vm_name*:8080
 
