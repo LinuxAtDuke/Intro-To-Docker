@@ -392,7 +392,7 @@ The `docker run` command has a lot of flags, and can get really complicated once
 
 The `--rm=true` option will remove your container from the host when it stops running.  It is only available if you run your Docker container interactively (`-it`), and not in detached mode (`-d`).
 
-**-v <host volume>:<container volume>**
+**-v \<host volume\>:\<container volume\>**
 
 The `-v` flag allows you to mount a volume from inside your container (that has been specified with the `VOLUME` instruction in the Dockerfile, remember) to a volume on your host.
 
@@ -400,7 +400,7 @@ The `-v` flag allows you to mount a volume from inside your container (that has 
 
 `docker run -it -v /tmp/my-volume:/var/www/html centos touch /var/www/html/test.txt` will mount /tmp/my-volume on your host (creating it if it doesn't exist) into /var/www/html on the container.  The command (touch /var/www/html/test.txt) then creates a test.txt file, which you would be able to see in /tmp/my-volume.
 
-**--name <name>**
+**--name \<name\>**
 
 The `--name` flag lets you assign a specific name to your container, rather than assigning a random one to it.  This helps when you want to link containers, or just to make them easier to identify.  You can only have one container with a specific name, though, even if it's no longer running.
 
@@ -436,11 +436,11 @@ This is where we get into some commands that will help you manage you images and
 
 You already know how to see your images, using the `docker images` command, and you know how to download new images from the Docker Registry with `docker pull`.  You also know how to build images with `docker build`.  Let's learn a few more:
 
-**docker rmi <name>**
+**docker rmi \<name\>**
 
 The `docker rmi` command removes (deletes) images.  You can specify the image by it's NAME, it's NAME:TAG, or it's IMAGE ID.
 
-**docker tag <image> <image>:<tagname>**
+**docker tag \<image\> \<image\>:\<tagname\>**
 
 We have talked about tagging before.  Tags are like symlinks, sort of.  You can tag an image with another name using `docker tag <image> <image>:<tagname>`.  This is usually used for version control, tagging "latest" to a particular build, and updating it when the build changes.  (Remember the base images, or WordPress?)
 
@@ -456,7 +456,7 @@ We have talked about tagging before.  Tags are like symlinks, sort of.  You can 
      fsm                 latest              06c25cda9581        3 hours ago         451.4 MB
      fsm                 2014                06c25cda9581        3 hours ago         451.4 MB
 
-**docker inspect <image> / docker inspect <container>**
+**docker inspect \<image\> / docker inspect \<container\>**
 
 The `docker inspect` command allows you to specify an image OR a container, and returns a JSON formatted list of attributes.  It's someone less userfriendly, but provides *a lot* of infomration about the image or container.  This is very useful  for troubleshooting (and is really useful if you ever get into using the Docker API).
 
@@ -510,19 +510,19 @@ Adding the `-a` flag to `docker ps` will show you a list of *all* the containers
     6a3ccf4ca3a3        896447f597d6        /usr/sbin/httpd -DFO   35 minutes ago      Exited (0) 34 minutes ago                          naughty_torvalds    
     a2f4de40310e        63c840f565f3        /usr/sbin/httpd -DFO   43 minutes ago      Exited (0) 35 minutes ago                          happy_morse     
 
-**docker stop <container>**
+**docker stop \<container\>**
 
 The `docker stop` command will stop a running container, gracefully sending a SIGTERM to the command that container is running.
 
-**docker kill <container>**
+**docker kill \<container\>**
 
 The `docker kill` command is similar to `docker stop`, but it's more forceful, sending a SIGKILL to the command the container is running.  This should be avoided if possible - it can cause some strange issues with Docker.
 
-**docker rm <container>**
+**docker rm \<container\>**
 
 The `docker rm` command is like the `docker rmi` command, and removes (deletes) a container.  This is good to do to containers you are no longer using, to clean up space.
 
-**docker attach <container>**
+**docker attach \<container\>**
 
 The `docker attach` command will allow you to attach to a container that's already running, but not attached.  This is most useful when attaching to a container that has a TTY (terminal) allocated (such as when you run /bin/bash as the containers CMD).  It's less helpful when there's not TTY present.
 
@@ -530,7 +530,7 @@ The `docker attach` command will allow you to attach to a container that's alrea
 
 Typing `CTRL+p CTRL+q` while you are inside a running container (ie: one that you started interactively, or one that you've attached to) will detach you from that container, leaving it running.
 
-**docker logs <container>**
+**docker logs \<container\>**
 
 The `docker logs` command will show you anything written to STDOUT by the command running inside your container.  Because of this, it's advantagous to send STDERR to STDOUT as well, if you're not already logging it somewhere that you can get to.
 
