@@ -302,6 +302,7 @@ In this lab, you're going to run a container from the Full Screen Mario image yo
     * No command is necessary (Look at the Dockerfile - can you tell why?)
 3. Open a browser and navigate to your VM, port 8080: http://*your_vm_name*:8080
 
+<a name='unit4'></a>
 ## Unit 4: More Dockerfile Instructions 
 
 Earlier, we learned about the FROM, MAINTAINER and CMD instructions, but there are more instructions available to use inside a Dockerfile.  Each instruction that is listed is saved as another layer, or intermediate image (remember those?) 
@@ -363,6 +364,7 @@ The VOLUME instruction will create a mount point with the specified name and tel
 
 This VOLUME instruction make the /var/www/html directory inside the contianer available to be mounted by the host, or other linked contianers.
 
+<a name='lab4'></a>
 ## Lab 4: Examine a More Complicated Dockerfile
 
 In this lab, you'll examine a Dockerfile that has a few of the commands used above, and then build the image.
