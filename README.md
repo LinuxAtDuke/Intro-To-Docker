@@ -27,8 +27,10 @@ Chris Collins
 <a name='unit0'></a>
 ## What Is Docker?
 
+If you go to the Docker website, [https://docs.docker.com](https://docs.docker.com), you'll see a dozen paragraphs explaining what Docker can do and how different techie folks can use it.  It's worth a read, but when it comes down to it, Docker is really just **containers that run commands**.
+
 <a name='lab0'></a>
-## Lab 0 - Creating a personal Linux VM and Installing Docker
+## Lab 0: Creating a personal Linux VM and Installing Docker
 
 1. Using a web browser, go to *https://vm-manage.oit.duke.edu*
 2. Login using your Duke NetId.
@@ -37,11 +39,11 @@ Chris Collins
 
 The vm-manage web page will tell you the name for your VM. The web site will also tell you the initial username and password. You should connect via ssh.
 
-Example: `ssh bitnami@colab-sbx-87.oit.duke.edu`
+*Example:* `ssh bitnami@colab-sbx-87.oit.duke.edu`
 
 5. Once logged in via ssh, enter the `passwd` command to set a unique password.
 
-Example:
+*Example:*
 
     passwd
     Changing password for bitnami.
@@ -54,7 +56,7 @@ Example:
 8. Logout and back in
 9. Verify you are now in the Docker group:
 
-Example:
+*Example:*
 
     groups
     bitnami adm cdrom dip plugdev lpadmin sambashare docker
@@ -70,9 +72,9 @@ At it's core, Docker creates **containers** from **images**.
 
 We will come back to containers later.  For now, let's focus on images.
 
-Images are based on layers, built up from the bottom, or *base image*.  The base image is a basic, stripped-down OS, like Ubuntu or CentOS.  Every change becomes another layer that is applied to the layer below it, and creates an *intermediate image*.
+Images are based on layers, built up from the bottom, or **base image**.  The base image is a basic, stripped-down OS, like Ubuntu or CentOS.  Every change becomes another layer that is applied to the layer below it, and creates an **intermediate image**.
 
-Example:
+*Example:*
 
 
                 Base Image
@@ -99,7 +101,7 @@ Example:
 
 Images can also be branched: You can apply a different set of changes to any layer, producing a new branch.
 
-Example:
+*Example:*
 
           Base Image
               |
@@ -118,7 +120,7 @@ Example:
 
 You can see what images you have on your system by using the `docker images` command:
 
-Example:
+*Example:*
 
     docker images
     REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
@@ -127,7 +129,7 @@ There's not much to see there, is it?  That's because there are no images instal
 
 Base images are maintained by a few groups in the Docker community, and are stored in the **Docker Registry** - a registry of community-contributed images hosted at www.Docker.com.  Docker can pull all of these images with a simple command: `docker pull`
 
-Example - download the CentOS base image
+*Example:* - download the CentOS base image
 
     docker pull centos
     68edf809afe7: Pulling dependent layers 
@@ -172,7 +174,7 @@ The Docker repository hosts hundreds (maybe thousands) of images - very few of t
 
 In addition to pulling an image from the registry, you can also build them from "source" (it's not the same as building a program from source code, but the idea is similar).
 
-In order to build a Docker image, you need at least 1 file, called a **Dockerfile**.  A Dockerfile consists of lines of instructions that make up each of the layers in your final image.  Let's look at a simple Dockerfile:
+In order to build a Docker image, you need at least one file, called a **Dockerfile**.  A Dockerfile consists of lines of instructions that make up each of the layers in your final image.  Let's look at a simple Dockerfile:
 
     # This is a basic "Hello World" image, for 
     # Linux@Duke's Introduction to Docker: Do Your Own Docker class
@@ -188,13 +190,13 @@ The first two lines, the ones beginning with "#" - are just comments.  They're n
 
 The `FROM` line specifies which base image your image is built on.  It's generally a good idea to be specific here.
 
-The `MAINTAINER` line specifies who created and maintains the image.  This should always be you or your group, if you're working with others on the image.  I like to add my email address, as well, in case anyone has any questions about the image.
+The `MAINTAINER` line specifies who created and maintains the image.  This should always be you or your group, if you're working with others on the image.  I like to add my email address as well, in case anyone has any questions about the image.
 
 The From and Maintainer lines are the only required lines in an image.
 
 The last line, `CMD`, specifies the command to run immediately when a container is started from this image, unless you specify a different command.  In this case, the container started from this image will echo "Hello, World" and then exit.
 
-To build the "helloworld" image, you need the Dockerfile.  You can write your own, or copy-and-paste it, but the easiest way is to clone it from a Github repository.  Obviously, you'll need **git** installed to do this (`apt-get install git`).
+To build the "helloworld" image, you need the Dockerfile.  You can write your own, or copy-and-paste it, but the easiest way is to clone it from a Github repository.  Obviously, you'll need **git** installed to do this (`sudo apt-get install git`).
 
     git clone https://github.com/LinuxAtDuke/Intro-To-Docker.git 
     cd Intro-To-Docker/helloworld
@@ -223,14 +225,14 @@ To build the "helloworld" image, you need the Dockerfile.  You can write your ow
     Removing intermediate container ef9d4e02a356
     Successfully built c2d5fc2d6b0a
 
-Alright, so what did we do here?  You should be familiar with Git already, so the git command `git clone https://github.com/LinuxAtDuke/Intro-To-Docker.git` cloned the contents of the LinuxAtDuke Intro-To-Docker repositoy to your local disk.
+Alright, so what did we do here?  You should be familiar with git already, so the git command `git clone https://github.com/LinuxAtDuke/Intro-To-Docker.git` cloned the contents of the LinuxAtDuke Intro-To-Docker repositoy to your local disk.
 
-After inspecting the Dockerfile to make sure it's OK (remember the Note about Security, above?), we then ran `docker build -t helloworld .`.
+After inspecting the Dockerfile to make sure it's OK (remember the *Note About Security*, above?), we then ran `docker build -t helloworld .`
 
 The `docker build` command tells Docker we're building an image from a Dockerfile.  The `-t helloworld` command tells Docker to tag the resulting image with the name "helloworld" (Otherwise, it would only have the IMAGE ID - a random string of characters).  Finally, the trailing `.` (period) tells Docker to use the Dockerfile from inside the current directory.
 
 <a name='lab2'></a>
-## Lab 2 - Building the FSM Image
+## Lab 2: Building the FSM Image
 
 There are many, many other commands that can go into a Dockerfile.  Let's go download the source for an image written by someone else, and examine it.
 
@@ -243,11 +245,11 @@ There are many, many other commands that can go into a Dockerfile.  Let's go dow
 <a name='unit3'></a>
 ## Unit 3: Running Containers from Images
 
-Up to this point, we've only downloaded or created images, but so far, we haven't done anything with them.  Let's look at running a container from the images we've been working with.
+Up to this point, we've only downloaded or created images, but so far we haven't done anything with them.  Let's look at running a container from the images we've been working with.
 
-The `docker run` command is used to run containers.  At it's most basic, you need only two flags to run a container: `docker run -d <image>`  In this case, you're telling the container to run in "detached" mode (in the background), and to run the image specified.  You will usually use more flags and probably a command.  Let's look at these:
+The `docker run` command is used to run containers.  At it's most basic, you need only two flags to run a container: `docker run -d <image>`  In this case, you're telling the container to run in "detached" mode (in the background), and to run the image specified.  You will usually use more flags and probably a command.  Let's look at some of these:
 
-Some basic "docker run" flags:
+*Some basic "docker run" flags:*
 
     -d		Detached mode: run the container in the backgroup (opposite of -i -t)
     -i		Interactive (usually used with -t)
@@ -258,29 +260,29 @@ These are probably the most common options.  Using the `-i` and `-t` flags (or `
 
 The `-p` flag lets you map ports from the container to your host, allowing you to access that port in the container from the outside, as you would with any other Linux host.
 
-Example:
+*Example:*
 
 Let's run the "helloworld" container.
 
     docker run -it helloworld
     Hello, World
 
-In this example, attached to the container, and it ran the command specified in it's Dockerfile (/bin/echo Hello, world).
+In this example we attached to the container, and it ran the command specified in it's Dockerfile (/bin/echo Hello, World).
 
 Another important part of the `docker run` commmand is the command you tell the container to run.  In the "helloworld" image, there is a command specified in the Dockerfile.  However, we can override that command when we start the container.
 
-Example:
+*Example:*
 
     docker run -it helloworld /bin/echo Goodbye, world!
     Goodbye, world!
 
-In the example above, we ran the command "/bin/echo Goodbye, world!" instead of the command in the Dockerfile.  If you specify a command, it **always** comes last, and after the image name.
+In the example above, we ran the command "/bin/echo Goodbye, world!" instead of the command in the Dockerfile.  If you specify a command, it *always* comes last, and after the image name.
 
 
 <a name='lab3'></a>
-## Lab 3 - Running the FSM container 
+## Lab 3: Running the FSM container 
 
-In this lab, you're going to run the Full Screen Mario container you built in the last lab.
+In this lab, you're going to run a container from the Full Screen Mario image you built in the last lab.
 
 1. Examine your images, and note what you called the Full Screen Mario image.
 2. Run the Full Screen Mario image, with the following options:
