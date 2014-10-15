@@ -1,7 +1,7 @@
 Introduction to Docker: "Do Your Own Docker"
 ============================================
 
-*Version 1.0 - 20141013*
+*Version 1.01 - 20141015*
 
 **Instructor**
 
