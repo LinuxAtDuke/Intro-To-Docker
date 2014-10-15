@@ -23,7 +23,7 @@ Chris Collins
 12. [Lab 5: Run a More Complicated Container](#lab5)
 13. [Unit 6: Image and Container Management](#unit6)
 14. [Lab 6: Cleanup!](#lab6)
-15. [Appendix 1: Running Docker on OSX]](#apx1)
+15. [Appendix 1: Running Docker on OSX](#apx1)
 
 <a name='unit0'></a>
 ## What Is Docker?
