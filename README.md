@@ -30,7 +30,7 @@ Chris Collins
 
 If you go to the Docker website, [https://docs.docker.com](https://docs.docker.com), you'll see a dozen paragraphs explaining what Docker can do and how different techie folks can use it.  It's worth a read, but when it comes down to it, Docker is really just **containers that run commands** and **images that make containers**.
 
-Docker uses LXC (LinuX Containers) as a way to run multiple isolated Linux systems on a single host. This uses cgroups to isloate resources and namespaces to make sure each virtual system is as isolated as possible from the host and other containers.  LXC and cgroups are built into the Linux kernel, so you can do all of this without Docker, but Docker provides an nice, human-friendly interface for this technology.
+Docker uses LXC (LinuX Containers) as a way to run multiple isolated Linux systems on a single host. This uses cgroups to isolate resources and namespaces to make sure each virtual system is as isolated as possible from the host and other containers.  LXC and cgroups are built into the Linux kernel, so you can do all of this without Docker, but Docker provides an nice, human-friendly interface for this technology.
 
 You don't need to know all about the LXC or cgroups stuff to use Docker, but it's interesting stuff, if you're curious.  All you need to know for this class is that Docker containers are tiny, efficient virtual servers that run in their own bubble inside a host server.
 
@@ -141,7 +141,7 @@ There's not much to see there, is it?  That's because there are no images instal
 
 Base images are maintained by a few groups in the Docker community, and are stored in the **Docker Registry** - a registry of community-contributed images hosted at www.Docker.com.  Docker can pull all of these images with a simple command: `docker pull`
 
-*Example:* - download the CentOS base image
+*Example:* Download the CentOS base image
 
     docker pull centos
     68edf809afe7: Pulling dependent layers 
@@ -177,7 +177,7 @@ The Docker repository hosts hundreds (maybe thousands) of images - very few of t
 ## Lab 1: Download some images 
 
 1. Download the "ubuntu" base image
-2. Download the "wordpress" image, and official image
+2. Download the "wordpress" image, an official image
 3. Examine your local images. Verify that you have the Ubuntu base image, and the WordPress image.
 4. Look at the various WordPress images.  Are there any tags?  If so, what are they?
 
@@ -202,7 +202,7 @@ The first two lines, the ones beginning with "#" - are just comments.  They're n
 
 The `FROM` instruction specifies which base image your image is built on.  It's generally a good idea to be specific here.
 
-The `MAINTAINER` instruction specifies who created and maintains the image.  This should always be you or your group, if you're working with others on the image.  I like to add my email address as well, in case anyone has any questions about the image.  This is actually built into the image itself, too.
+The `MAINTAINER` instruction specifies who created and maintains the image.  This should always be you or your group, if you're working with others on the image.  I like to add my email address as well, in case anyone has any questions about the image.  This actually gets built into the image itself, too.
 
 The From and Maintainer instruction are the only required lines in an image.
 
@@ -237,7 +237,7 @@ To build the "helloworld" image, you need the Dockerfile.  You can write your ow
     Removing intermediate container ef9d4e02a356
     Successfully built c2d5fc2d6b0a
 
-Alright, so what did we do here?  You should be familiar with git already, so the git command `git clone https://github.com/LinuxAtDuke/Intro-To-Docker.git` cloned the contents of the LinuxAtDuke Intro-To-Docker repositoy to your local disk.
+Alright, so what did we do here?  You should be familiar with git already, so the git command `git clone https://github.com/LinuxAtDuke/Intro-To-Docker.git` cloned the contents of the LinuxAtDuke Intro-To-Docker repository to your local disk.
 
 After inspecting the Dockerfile to make sure it's OK (remember the *Note About Security*, above?), we then ran `docker build -t helloworld .`
 
@@ -270,7 +270,7 @@ The `docker run` command is used to run containers.  At it's most basic, you nee
 
 These are probably the most common options.  Using the `-i` and `-t` flags (or `-it`) will attach you to a terminal inside the container.  Using the `-d` flag will run the container in the background, instead.
 
-The `-p` flag lets you map ports from the container to your host, allowing you to access that port in the container from the outside, as you would with any other Linux host.
+The `-p` flag lets you map ports from the container to your host, allowing you to access that port inside the container from the outside, as you would with any other Linux host.
 
 *Example:*
 
@@ -279,9 +279,9 @@ Let's run the "helloworld" container.
     docker run -it helloworld
     Hello, World
 
-In this example we attached to the container, and it ran the command specified in it's Dockerfile (/bin/echo Hello, World).
+In this example we ran the container interactively, and it ran the command specified in it's Dockerfile (/bin/echo Hello, World).
 
-Another important part of the `docker run` commmand is the command you tell the container to run.  In the "helloworld" image, there is a command specified in the Dockerfile.  However, we can override that command when we start the container.
+Another important part of the `docker run` command is the command you tell the container to run.  In the "helloworld" image, there is a command specified in the Dockerfile.  However, we can override that command when we start the container.
 
 *Example:*
 
@@ -328,7 +328,7 @@ The ADD instruction can also take a URL as the source:
 
 This ADD instruction will copy the image of Grumpy Cat from Wikimedia and put it inside the container as /srv/grumpycat.jpg
 
-The ADD instruction will also unpack an archive in a support format:
+The ADD instruction will also unpack an archive (if it's a supported format):
 
     ADD https://wordpress.org/latest.tar.gz /var/www/html
 
@@ -363,7 +363,7 @@ The VOLUME instruction will create a mount point with the specified name and tel
 
     VOLUME ["/var/www/html"]
 
-This VOLUME instruction make the /var/www/html directory inside the contianer available to be mounted by the host, or other linked contianers.
+This VOLUME instruction make the /var/www/html directory inside the container available to be mounted by the host, or other linked containers.
 
 <a name='lab4'></a>
 ## Lab 4: Examine a More Complicated Dockerfile
@@ -422,7 +422,7 @@ The `-P` flag is similar to the `-p` flag, but it publishes ALL ports on the con
   * Map port 8081 of your host VM to port 80 in the container
   * Mount ~/grumpy of your host VM as /var/www/html/grumpy
   * Name your new container "my_grumpy_cat"
-  * Override the CMD line in the Dockerfile, and tell the contianer to run "/bin/bash" instead
+  * Override the CMD line in the Dockerfile, and tell the container to run "/bin/bash" instead
 2. What happend when you ran your contianer?
 3. Inside the container, start the webserver: `/usr/sbin/httpd &`
 4. Use a new command: CTRL+p CTRL+q (Control p, control q) to detach from your container, leaving it running.
@@ -459,7 +459,7 @@ We have talked about tagging before.  Tags are like symlinks, sort of.  You can 
 
 **docker inspect \<image\> / docker inspect \<container\>**
 
-The `docker inspect` command allows you to specify an image OR a container, and returns a JSON formatted list of attributes.  It's someone less userfriendly, but provides *a lot* of infomration about the image or container.  This is very useful  for troubleshooting (and is really useful if you ever get into using the Docker API).
+The `docker inspect` command allows you to specify an image OR a container, and returns a JSON formatted list of attributes.  It's somewhat less userfriendly, but provides *a lot* of information about the image or container.  This is very useful  for troubleshooting (and is really useful if you ever get into using the Docker API).
 
 *Example:*
 
@@ -525,7 +525,7 @@ The `docker rm` command is like the `docker rmi` command, and removes (deletes) 
 
 **docker attach \<container\>**
 
-The `docker attach` command will allow you to attach to a container that's already running, but not attached.  This is most useful when attaching to a container that has a TTY (terminal) allocated (such as when you run /bin/bash as the containers CMD).  It's less helpful when there's not TTY present.
+The `docker attach` command will allow you to attach to a container that's already running, but not attached.  This is most useful when attaching to a container that has a TTY (terminal) allocated (such as when you run /bin/bash as the containers CMD).  It's less helpful when there's no TTY present.
 
 **CTRL+p CTRL+q**
 
@@ -533,7 +533,7 @@ Typing `CTRL+p CTRL+q` while you are inside a running container (ie: one that yo
 
 **docker logs \<container\>**
 
-The `docker logs` command will show you anything written to STDOUT by the command running inside your container.  Because of this, it's advantagous to send STDERR to STDOUT as well, if you're not already logging it somewhere that you can get to.
+The `docker logs` command will show you anything written to STDOUT by the command running inside your container.  Because of this, it's advantageous to send STDERR to STDOUT as well, if you're not already logging it somewhere that you can get to.
 
 <a name='lab6'></a>
 ## Lab 6: Cleanup!
@@ -545,7 +545,7 @@ Using the commands you learned in Unit 6:
 3. Show all the containers, including the stopped ones, on your host
 4. Remove all the stopped containers
 5. Run a new container, interactively, from the base image.  Make "/bin/bash" the command.
-6. Detatch from the running container.
+6. Detach from the running container.
 7. Inspect the running container.  What is it's IP Address?  What is it's Hostname?
 8. Stop the running image, and remove it.
 9. Show all of your images.
