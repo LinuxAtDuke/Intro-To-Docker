@@ -23,6 +23,7 @@ Chris Collins
 12. [Lab 5: Run a More Complicated Container](#lab5)
 13. [Unit 6: Image and Container Management](#unit6)
 14. [Lab 6: Cleanup!](#lab6)
+15. [Appendix 1: Running Docker on OSX]](#apx1)
 
 <a name='unit0'></a>
 ## What Is Docker?
@@ -551,6 +552,11 @@ Using the commands you learned in Unit 6:
 10. Tag your grumpycat image (or whatever you called it) with today's date
 11. Remove all the Full Screen Mario images
 12. Remove any images with the name \<none\>.  What do you think these are?
+
+<a name='apx1'></a>
+## Appendix 1: Running Docker on OSX
+
+Right now, Docker runs primarily on Linux systems, but you can run Docker on Apple's OSX operating system using a virtual machine and [VirtualBox](https://www.virtualbox.org/).  Darin London [\(https://github.com/dmlond\)] has written a great guide to using Docker on OSX and graciously allowed it to be added to this class: [Running Docker on the Mac OSX](max_osx)
 
 ---
 
