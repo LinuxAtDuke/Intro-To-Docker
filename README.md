@@ -375,7 +375,7 @@ In this lab, you'll examine a Dockerfile that has a few of the commands used abo
 2. Change directories to the "grumpycat" directory.
 3. Examine the Dockerfile inside:
   * What does the ADD instruction do here?
-  * What does the RUN instruction do here?
+  * What do the RUN instructions do here?
   * What does the EXPOSE instruction do here?
   * What does the VOLUME instruction do here?
   * What does the CMD instruction do here?
@@ -424,10 +424,10 @@ The `-P` flag is similar to the `-p` flag, but it publishes ALL ports on the con
   * Name your new container "my_grumpy_cat"
   * Override the CMD line in the Dockerfile, and tell the container to run "/bin/bash" instead
 2. What happend when you ran your contianer?
-3. Inside the container, start the webserver: `/usr/sbin/httpd &`
+3. Inside the container, start the webserver: `service httpd start`
 4. Use a new command: CTRL+p CTRL+q (Control p, control q) to detach from your container, leaving it running.
 5. Open a browser and navigate to your VM, port 8081: http://*your_vm_name*:8081
-6. Copy Intro-To-Docker/grumpycat/doge.jpg into ~/grumpy
+6. Copy Intro-To-Docker/grumpycat/doge.jpg into ~/grumpy - you will need to use `sudo`
 7. Open a browser and navigate to your VM, port 8081: http://*your_vm_name*:8081/doge
 
 <a name='unit6'></a>
