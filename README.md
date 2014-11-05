@@ -556,7 +556,7 @@ Using the commands you learned in Unit 6:
 <a name='apx1'></a>
 ## Appendix 1: Running Docker on OSX
 
-Right now, Docker runs primarily on Linux systems, but you can run Docker on Apple's OSX operating system using a virtual machine and [VirtualBox](https://www.virtualbox.org/).  Darin London [\(https://github.com/dmlond\)](https://github.com/dmlond) has written a great guide to using Docker on OSX and graciously allowed it to be added to this class: [Running Docker on the Mac OSX](max_osx/README.md)
+Right now, Docker runs primarily on Linux systems, but you can run Docker on Apple's OSX operating system using a virtual machine and [VirtualBox](https://www.virtualbox.org/).  Darin London [\(https://github.com/dmlond\)](https://github.com/dmlond) has written a great guide to using Docker on OSX and graciously allowed it to be added to this class: [Running Docker on the Mac OSX](mac_osx/README.md)
 
 ---
 
