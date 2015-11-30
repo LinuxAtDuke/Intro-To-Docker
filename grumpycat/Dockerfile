@@ -11,7 +11,12 @@ RUN rm /etc/httpd/conf.d/welcome.conf
 ADD https://upload.wikimedia.org/wikipedia/commons/e/ee/Grumpy_Cat_by_Gage_Skidmore.jpg /var/www/html/grumpycat.jpg
 RUN chmod 644 /var/www/html/grumpycat.jpg
 
-RUN echo "Redirect /doge /grumpy/doge.jpg" > /etc/httpd/conf.d/redirect.conf
+RUN mkdir /var/www/html/grumpy
+ADD doge.jpg /var/www/html/grumpy
+
+RUN echo "rewriteEngine On" >> /etc/httpd/conf.d/redirect.conf
+RUN echo "RewriteRule ^/doge /grumpy/doge.jpg" >> /etc/httpd/conf.d/redirect.conf
+RUN echo "RewriteRule ^/$ /grumpycat.jpg" >> /etc/httpd/conf.d/redirect.conf
 
 VOLUME ["/var/www/html"]
 

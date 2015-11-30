@@ -1,7 +1,7 @@
 Introduction to Docker: "Do Your Own Docker"
 ============================================
 
-*Version 1.01 - 20141015*
+*Version 1.02 - 20151130*
 
 **Instructor**
 
@@ -63,15 +63,15 @@ The vm-manage web page will tell you the name for your VM. The web site will als
     Enter new UNIX password:
     Retype new UNIX password:
 
-6. Install the Docker package: `sudo apt-get install docker.io`
+6. Install the Docker package: `sudo wget --quiet  -O -  https://get.docker.com/ | sh`
 7. Add your user to the Docker group: `sudo usermod -aG docker bitnami`
-8. Logout and back in
+8. Log in to your new Docker group: `newgrp docker`
 9. Verify you are now in the Docker group:
 
 *Example:*
 
     groups
-    bitnami adm cdrom dip plugdev lpadmin sambashare docker
+    docker adm cdrom dip plugdev lpadmin sambashare bitnami
  
 <a name='unit1'></a>
 ## Unit 1: Docker Images
