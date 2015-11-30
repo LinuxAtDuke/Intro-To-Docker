@@ -141,9 +141,9 @@ There's not much to see there, is it?  That's because there are no images instal
 
 Base images are maintained by a few groups in the Docker community, and are stored in the **Docker Registry** - a registry of community-contributed images hosted at www.Docker.com.  Docker can pull all of these images with a simple command: `docker pull`
 
-*Example:* Download the CentOS base image
+*Example:* Download the CentOS Latest, CentOS 7 and CentOS 6 base images:
 
-    docker pull centos
+    for image in centos:latest centos:centos7 centos:centos6 ; do docker pull $image ; done
     68edf809afe7: Pulling dependent layers 
     87e5b6b3ccc1: Pulling dependent layers 
     87e5b6b3ccc1: Pulling metadata 
@@ -160,12 +160,11 @@ After you download the CentOS base image, you can examine your images again.
 
     docker images
     REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
-    centos              centos5             504a65221a38        11 days ago         467.1 MB
-    centos              centos6             68edf809afe7        11 days ago         212.7 MB
-    centos              centos7             87e5b6b3ccc1        11 days ago         224 MB
-    centos              latest              87e5b6b3ccc1        11 days ago         224 MB
+    centos              centos6             1a895dd3954a        6 weeks ago         190.6 MB
+    centos              centos7             e9fa5d3a0d0e        6 weeks ago         172.3 MB
+    centos              latest              e9fa5d3a0d0e        6 weeks ago         172.3 MB
 
-Notice that there are multiple images listed.  These are all part of the same download.  There are images for three different versions of CentOS - CentOS 5, CentOS 6 and CentOS 7, as well as "latest".
+Notice that there are multiple images listed.  There are images for two different versions of CentOS - CentOS 6 and CentOS 7, as well as "latest".
 
 Notice that the "IMAGE ID" for "latest" is the same as "centos7".  The "latest" image is a **tag** that points to centos7.  This tag system allows you to specify `centos` or `centos:latest` when you use the image, and you'll always get the latest version.  Similarly, you can specify `centos:centos6`, etc, and you'll always get that specific version of the image.
 
@@ -176,10 +175,10 @@ The Docker repository hosts hundreds (maybe thousands) of images - very few of t
 <a name='lab1'></a>
 ## Lab 1: Download some images 
 
-1. Download the "ubuntu" base image
-2. Download the "wordpress" image, an official image
-3. Examine your local images. Verify that you have the Ubuntu base image, and the WordPress image.
-4. Look at the various WordPress images.  Are there any tags?  If so, what are they?
+1. Download the "ubuntu:latest" base image
+2. Download ALL of the "alpine" images at once, using the "-a" flag
+3. Examine your local images. Verify that you have the Ubuntu image, and the Alpine images.
+4. Look at the various Alpine images.  Are there any tags?  If so, what are they?
 
 <a name='unit2'></a>
 ## Unit 2: Building an image from "source"
@@ -371,7 +370,7 @@ This VOLUME instruction make the /var/www/html directory inside the container av
 In this lab, you'll examine a Dockerfile that has a few of the commands used above, and then build the image.
 
 1. You should have already cloned the Intro-To-Docker repo when you looked at the "helloworld" Dockerfile.  If you haven't:
-  * `git clone git clone https://github.com/LinuxAtDuke/Intro-To-Docker.git`
+  * `git clone https://github.com/LinuxAtDuke/Intro-To-Docker.git`
 2. Change directories to the "grumpycat" directory.
 3. Examine the Dockerfile inside:
   * What does the ADD instruction do here?
@@ -418,7 +417,7 @@ The `-P` flag is similar to the `-p` flag, but it publishes ALL ports on the con
 
 1. Using the grumpycat image you built in the last lab, start a grumpycat container
   * Run it interactively with a pseudo-TTY (terminal)
-  * Make sure it removes itself when it stops
+   * Make sure it removes itself when it stops
   * Map port 8081 of your host VM to port 80 in the container
   * Mount ~/grumpy of your host VM as /var/www/html/grumpy
   * Name your new container "my_grumpy_cat"
@@ -556,7 +555,7 @@ Using the commands you learned in Unit 6:
 <a name='apx1'></a>
 ## Appendix 1: Running Docker on OSX
 
-Right now, Docker runs primarily on Linux systems, but you can run Docker on Apple's OSX operating system using a virtual machine and [VirtualBox](https://www.virtualbox.org/).  Darin London [\(https://github.com/dmlond\)](https://github.com/dmlond) has written a great guide to using Docker on OSX and graciously allowed it to be added to this class: [Running Docker on the Mac OSX](mac_osx/README.md)
+Right now, Docker runs primarily on Linux systems, but you can run Docker on Apple's OSX operating system using a virtual machine and [VirtualBox](https://www.virtualbox.org/).  Darin London [\(https://github.com/dmlond\)](https://github.com/dmlond) has written a great guide to using Docker on OSX and graciously allowed it to be added to this class: [Running Docker on the Mac OSX](max_osx/README.md)
 
 ---
 
