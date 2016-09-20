@@ -1,7 +1,7 @@
 Introduction to Docker: "Do Your Own Docker"
 ============================================
 
-*Version 1.02 - 20151130*
+*Version 1.03 - 20160920*
 
 **Instructor**
 
@@ -160,9 +160,9 @@ After you download the CentOS base image, you can examine your images again.
 
     docker images
     REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
-    centos              centos6             1a895dd3954a        6 weeks ago         190.6 MB
-    centos              centos7             e9fa5d3a0d0e        6 weeks ago         172.3 MB
-    centos              latest              e9fa5d3a0d0e        6 weeks ago         172.3 MB
+    centos              centos6             f07f6ca555a5        13 days ago         194.6 MB
+    centos              centos7             980e0e4c79ec        13 days ago         196.8 MB
+    centos              latest              980e0e4c79ec        13 days ago         196.8 MB
 
 Notice that there are multiple images listed.  There are images for two different versions of CentOS - CentOS 6 and CentOS 7, as well as "latest".
 
@@ -264,7 +264,7 @@ The `docker run` command is used to run containers.  At it's most basic, you nee
 
     -d		Detached mode: run the container in the backgroup (opposite of -i -t)
     -i		Interactive (usually used with -t)
-    -t		TTY: Allocate a pseud-TTY (basically a terminal interface)
+    -t		TTY: Allocate a pseudo-TTY (a terminal interface)
     -p		Publish Ports: -p <host port>:<container port>
 
 These are probably the most common options.  Using the `-i` and `-t` flags (or `-it`) will attach you to a terminal inside the container.  Using the `-d` flag will run the container in the background, instead.
@@ -420,14 +420,15 @@ The `-P` flag is similar to the `-p` flag, but it publishes ALL ports on the con
    * Make sure it removes itself when it stops
   * Map port 8081 of your host VM to port 80 in the container
   * Mount ~/grumpy of your host VM as /var/www/html/grumpy
-  * Name your new container "my_grumpy_cat"
+  * Name your new container "tartar_sauce"
   * Override the CMD line in the Dockerfile, and tell the container to run "/bin/bash" instead
 2. What happend when you ran your contianer?
 3. Inside the container, start the webserver: `service httpd start`
 4. Use a new command: CTRL+p CTRL+q (Control p, control q) to detach from your container, leaving it running.
 5. Open a browser and navigate to your VM, port 8081: http://*your_vm_name*:8081
-6. Copy Intro-To-Docker/grumpycat/doge.jpg into ~/grumpy - you will need to use `sudo`
-7. Open a browser and navigate to your VM, port 8081: http://*your_vm_name*:8081/doge
+6. Open a browser and navigate to your VM, port 8081: http://*your_vm_name*:8081/doge - what happens?
+7. Copy Intro-To-Docker/grumpycat/doge.jpg into ~/grumpy - you will need to use `sudo`
+9. Visit http://*your_vm_name*:8081/doge again - what happens?
 
 <a name='unit6'></a>
 ## Unit 6: Image and Container Management
@@ -543,14 +544,16 @@ Using the commands you learned in Unit 6:
 2. Stop all of the running containers
 3. Show all the containers, including the stopped ones, on your host
 4. Remove all the stopped containers
-5. Run a new container, interactively, from the base image.  Make "/bin/bash" the command.
-6. Detach from the running container.
-7. Inspect the running container.  What is it's IP Address?  What is it's Hostname?
-8. Stop the running image, and remove it.
-9. Show all of your images.
-10. Tag your grumpycat image (or whatever you called it) with today's date
-11. Remove all the Full Screen Mario images
-12. Remove any images with the name \<none\>.  What do you think these are?
+5. Run a new container, interactively, from the centos:centos7 base image.  Make "/bin/bash" the command.
+6. Run `top` in the new container.
+7. Detach from the running container.
+8. Run `top` again - can you find the container processes?
+9. Inspect the running container.  What is it's IP Address?  What is it's Hostname?
+10. Stop the running image, and remove it.
+11. Show all of your images.
+12. Tag your grumpycat image (or whatever you called it) with today's date
+13. Remove all the Full Screen Mario images
+14. Remove any images with the name \<none\>.  What do you think these are?
 
 <a name='apx1'></a>
 ## Appendix 1: Running Docker on OSX
