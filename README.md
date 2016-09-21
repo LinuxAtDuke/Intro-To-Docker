@@ -1,7 +1,7 @@
 Introduction to Docker: "Do Your Own Docker"
 ============================================
 
-*Version 1.0 - 20141013*
+*Version 1.03 - 20160920*
 
 **Instructor**
 
@@ -23,13 +23,14 @@ Chris Collins
 12. [Lab 5: Run a More Complicated Container](#lab5)
 13. [Unit 6: Image and Container Management](#unit6)
 14. [Lab 6: Cleanup!](#lab6)
+15. [Appendix 1: Running Docker on OSX](#apx1)
 
 <a name='unit0'></a>
 ## What Is Docker?
 
 If you go to the Docker website, [https://docs.docker.com](https://docs.docker.com), you'll see a dozen paragraphs explaining what Docker can do and how different techie folks can use it.  It's worth a read, but when it comes down to it, Docker is really just **containers that run commands** and **images that make containers**.
 
-Docker uses LXC (LinuX Containers) as a way to run multiple isolated Linux systems on a single host. This uses cgroups to isloate resources and namespaces to make sure each virtual system is as isolated as possible from the host and other containers.  LXC and cgroups are built into the Linux kernel, so you can do all of this without Docker, but Docker provides an nice, human-friendly interface for this technology.
+Docker uses LXC (LinuX Containers) as a way to run multiple isolated Linux systems on a single host. This uses cgroups to isolate resources and namespaces to make sure each virtual system is as isolated as possible from the host and other containers.  LXC and cgroups are built into the Linux kernel, so you can do all of this without Docker, but Docker provides an nice, human-friendly interface for this technology.
 
 You don't need to know all about the LXC or cgroups stuff to use Docker, but it's interesting stuff, if you're curious.  All you need to know for this class is that Docker containers are tiny, efficient virtual servers that run in their own bubble inside a host server.
 
@@ -62,15 +63,15 @@ The vm-manage web page will tell you the name for your VM. The web site will als
     Enter new UNIX password:
     Retype new UNIX password:
 
-6. Install the Docker package: `sudo apt-get install docker.io`
+6. Install the Docker package: `sudo wget --quiet  -O -  https://get.docker.com/ | sh`
 7. Add your user to the Docker group: `sudo usermod -aG docker bitnami`
-8. Logout and back in
+8. Log in to your new Docker group: `newgrp docker`
 9. Verify you are now in the Docker group:
 
 *Example:*
 
     groups
-    bitnami adm cdrom dip plugdev lpadmin sambashare docker
+    docker adm cdrom dip plugdev lpadmin sambashare bitnami
  
 <a name='unit1'></a>
 ## Unit 1: Docker Images
@@ -140,9 +141,9 @@ There's not much to see there, is it?  That's because there are no images instal
 
 Base images are maintained by a few groups in the Docker community, and are stored in the **Docker Registry** - a registry of community-contributed images hosted at www.Docker.com.  Docker can pull all of these images with a simple command: `docker pull`
 
-*Example:* - download the CentOS base image
+*Example:* Download the CentOS Latest, CentOS 7 and CentOS 6 base images:
 
-    docker pull centos
+    for image in centos:latest centos:centos7 centos:centos6 ; do docker pull $image ; done
     68edf809afe7: Pulling dependent layers 
     87e5b6b3ccc1: Pulling dependent layers 
     87e5b6b3ccc1: Pulling metadata 
@@ -159,12 +160,11 @@ After you download the CentOS base image, you can examine your images again.
 
     docker images
     REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
-    centos              centos5             504a65221a38        11 days ago         467.1 MB
-    centos              centos6             68edf809afe7        11 days ago         212.7 MB
-    centos              centos7             87e5b6b3ccc1        11 days ago         224 MB
-    centos              latest              87e5b6b3ccc1        11 days ago         224 MB
+    centos              centos6             f07f6ca555a5        13 days ago         194.6 MB
+    centos              centos7             980e0e4c79ec        13 days ago         196.8 MB
+    centos              latest              980e0e4c79ec        13 days ago         196.8 MB
 
-Notice that there are multiple images listed.  These are all part of the same download.  There are images for three different versions of CentOS - CentOS 5, CentOS 6 and CentOS 7, as well as "latest".
+Notice that there are multiple images listed.  There are images for two different versions of CentOS - CentOS 6 and CentOS 7, as well as "latest".
 
 Notice that the "IMAGE ID" for "latest" is the same as "centos7".  The "latest" image is a **tag** that points to centos7.  This tag system allows you to specify `centos` or `centos:latest` when you use the image, and you'll always get the latest version.  Similarly, you can specify `centos:centos6`, etc, and you'll always get that specific version of the image.
 
@@ -175,10 +175,10 @@ The Docker repository hosts hundreds (maybe thousands) of images - very few of t
 <a name='lab1'></a>
 ## Lab 1: Download some images 
 
-1. Download the "ubuntu" base image
-2. Download the "wordpress" image, and official image
-3. Examine your local images. Verify that you have the Ubuntu base image, and the WordPress image.
-4. Look at the various WordPress images.  Are there any tags?  If so, what are they?
+1. Download the "ubuntu:latest" base image
+2. Download ALL of the "alpine" images at once, using the "-a" flag
+3. Examine your local images. Verify that you have the Ubuntu image, and the Alpine images.
+4. Look at the various Alpine images.  Are there any tags?  If so, what are they?
 
 <a name='unit2'></a>
 ## Unit 2: Building an image from "source"
@@ -201,7 +201,7 @@ The first two lines, the ones beginning with "#" - are just comments.  They're n
 
 The `FROM` instruction specifies which base image your image is built on.  It's generally a good idea to be specific here.
 
-The `MAINTAINER` instruction specifies who created and maintains the image.  This should always be you or your group, if you're working with others on the image.  I like to add my email address as well, in case anyone has any questions about the image.  This is actually built into the image itself, too.
+The `MAINTAINER` instruction specifies who created and maintains the image.  This should always be you or your group, if you're working with others on the image.  I like to add my email address as well, in case anyone has any questions about the image.  This actually gets built into the image itself, too.
 
 The From and Maintainer instruction are the only required lines in an image.
 
@@ -236,7 +236,7 @@ To build the "helloworld" image, you need the Dockerfile.  You can write your ow
     Removing intermediate container ef9d4e02a356
     Successfully built c2d5fc2d6b0a
 
-Alright, so what did we do here?  You should be familiar with git already, so the git command `git clone https://github.com/LinuxAtDuke/Intro-To-Docker.git` cloned the contents of the LinuxAtDuke Intro-To-Docker repositoy to your local disk.
+Alright, so what did we do here?  You should be familiar with git already, so the git command `git clone https://github.com/LinuxAtDuke/Intro-To-Docker.git` cloned the contents of the LinuxAtDuke Intro-To-Docker repository to your local disk.
 
 After inspecting the Dockerfile to make sure it's OK (remember the *Note About Security*, above?), we then ran `docker build -t helloworld .`
 
@@ -264,12 +264,12 @@ The `docker run` command is used to run containers.  At it's most basic, you nee
 
     -d		Detached mode: run the container in the backgroup (opposite of -i -t)
     -i		Interactive (usually used with -t)
-    -t		TTY: Allocate a pseud-TTY (basically a terminal interface)
+    -t		TTY: Allocate a pseudo-TTY (a terminal interface)
     -p		Publish Ports: -p <host port>:<container port>
 
 These are probably the most common options.  Using the `-i` and `-t` flags (or `-it`) will attach you to a terminal inside the container.  Using the `-d` flag will run the container in the background, instead.
 
-The `-p` flag lets you map ports from the container to your host, allowing you to access that port in the container from the outside, as you would with any other Linux host.
+The `-p` flag lets you map ports from the container to your host, allowing you to access that port inside the container from the outside, as you would with any other Linux host.
 
 *Example:*
 
@@ -278,9 +278,9 @@ Let's run the "helloworld" container.
     docker run -it helloworld
     Hello, World
 
-In this example we attached to the container, and it ran the command specified in it's Dockerfile (/bin/echo Hello, World).
+In this example we ran the container interactively, and it ran the command specified in it's Dockerfile (/bin/echo Hello, World).
 
-Another important part of the `docker run` commmand is the command you tell the container to run.  In the "helloworld" image, there is a command specified in the Dockerfile.  However, we can override that command when we start the container.
+Another important part of the `docker run` command is the command you tell the container to run.  In the "helloworld" image, there is a command specified in the Dockerfile.  However, we can override that command when we start the container.
 
 *Example:*
 
@@ -327,7 +327,7 @@ The ADD instruction can also take a URL as the source:
 
 This ADD instruction will copy the image of Grumpy Cat from Wikimedia and put it inside the container as /srv/grumpycat.jpg
 
-The ADD instruction will also unpack an archive in a support format:
+The ADD instruction will also unpack an archive (if it's a supported format):
 
     ADD https://wordpress.org/latest.tar.gz /var/www/html
 
@@ -362,7 +362,7 @@ The VOLUME instruction will create a mount point with the specified name and tel
 
     VOLUME ["/var/www/html"]
 
-This VOLUME instruction make the /var/www/html directory inside the contianer available to be mounted by the host, or other linked contianers.
+This VOLUME instruction make the /var/www/html directory inside the container available to be mounted by the host, or other linked containers.
 
 <a name='lab4'></a>
 ## Lab 4: Examine a More Complicated Dockerfile
@@ -370,11 +370,11 @@ This VOLUME instruction make the /var/www/html directory inside the contianer av
 In this lab, you'll examine a Dockerfile that has a few of the commands used above, and then build the image.
 
 1. You should have already cloned the Intro-To-Docker repo when you looked at the "helloworld" Dockerfile.  If you haven't:
-  * `git clone git clone https://github.com/LinuxAtDuke/Intro-To-Docker.git`
+  * `git clone https://github.com/LinuxAtDuke/Intro-To-Docker.git`
 2. Change directories to the "grumpycat" directory.
 3. Examine the Dockerfile inside:
   * What does the ADD instruction do here?
-  * What does the RUN instruction do here?
+  * What do the RUN instructions do here?
   * What does the EXPOSE instruction do here?
   * What does the VOLUME instruction do here?
   * What does the CMD instruction do here?
@@ -417,17 +417,18 @@ The `-P` flag is similar to the `-p` flag, but it publishes ALL ports on the con
 
 1. Using the grumpycat image you built in the last lab, start a grumpycat container
   * Run it interactively with a pseudo-TTY (terminal)
-  * Make sure it removes itself when it stops
+   * Make sure it removes itself when it stops
   * Map port 8081 of your host VM to port 80 in the container
   * Mount ~/grumpy of your host VM as /var/www/html/grumpy
-  * Name your new container "my_grumpy_cat"
-  * Override the CMD line in the Dockerfile, and tell the contianer to run "/bin/bash" instead
+  * Name your new container "tartar_sauce"
+  * Override the CMD line in the Dockerfile, and tell the container to run "/bin/bash" instead
 2. What happend when you ran your contianer?
-3. Inside the container, start the webserver: `/usr/sbin/httpd &`
+3. Inside the container, start the webserver: `service httpd start`
 4. Use a new command: CTRL+p CTRL+q (Control p, control q) to detach from your container, leaving it running.
 5. Open a browser and navigate to your VM, port 8081: http://*your_vm_name*:8081
-6. Copy Intro-To-Docker/grumpycat/doge.jpg into ~/grumpy
-7. Open a browser and navigate to your VM, port 8081: http://*your_vm_name*:8081/doge
+6. Open a browser and navigate to your VM, port 8081: http://*your_vm_name*:8081/doge - what happens?
+7. Copy Intro-To-Docker/grumpycat/doge.jpg into ~/grumpy - you will need to use `sudo`
+9. Visit http://*your_vm_name*:8081/doge again - what happens?
 
 <a name='unit6'></a>
 ## Unit 6: Image and Container Management
@@ -458,7 +459,7 @@ We have talked about tagging before.  Tags are like symlinks, sort of.  You can 
 
 **docker inspect \<image\> / docker inspect \<container\>**
 
-The `docker inspect` command allows you to specify an image OR a container, and returns a JSON formatted list of attributes.  It's someone less userfriendly, but provides *a lot* of infomration about the image or container.  This is very useful  for troubleshooting (and is really useful if you ever get into using the Docker API).
+The `docker inspect` command allows you to specify an image OR a container, and returns a JSON formatted list of attributes.  It's somewhat less userfriendly, but provides *a lot* of information about the image or container.  This is very useful  for troubleshooting (and is really useful if you ever get into using the Docker API).
 
 *Example:*
 
@@ -524,7 +525,7 @@ The `docker rm` command is like the `docker rmi` command, and removes (deletes) 
 
 **docker attach \<container\>**
 
-The `docker attach` command will allow you to attach to a container that's already running, but not attached.  This is most useful when attaching to a container that has a TTY (terminal) allocated (such as when you run /bin/bash as the containers CMD).  It's less helpful when there's not TTY present.
+The `docker attach` command will allow you to attach to a container that's already running, but not attached.  This is most useful when attaching to a container that has a TTY (terminal) allocated (such as when you run /bin/bash as the containers CMD).  It's less helpful when there's no TTY present.
 
 **CTRL+p CTRL+q**
 
@@ -532,7 +533,7 @@ Typing `CTRL+p CTRL+q` while you are inside a running container (ie: one that yo
 
 **docker logs \<container\>**
 
-The `docker logs` command will show you anything written to STDOUT by the command running inside your container.  Because of this, it's advantagous to send STDERR to STDOUT as well, if you're not already logging it somewhere that you can get to.
+The `docker logs` command will show you anything written to STDOUT by the command running inside your container.  Because of this, it's advantageous to send STDERR to STDOUT as well, if you're not already logging it somewhere that you can get to.
 
 <a name='lab6'></a>
 ## Lab 6: Cleanup!
@@ -543,14 +544,21 @@ Using the commands you learned in Unit 6:
 2. Stop all of the running containers
 3. Show all the containers, including the stopped ones, on your host
 4. Remove all the stopped containers
-5. Run a new container, interactively, from the base image.  Make "/bin/bash" the command.
-6. Detatch from the running container.
-7. Inspect the running container.  What is it's IP Address?  What is it's Hostname?
-8. Stop the running image, and remove it.
-9. Show all of your images.
-10. Tag your grumpycat image (or whatever you called it) with today's date
-11. Remove all the Full Screen Mario images
-12. Remove any images with the name \<none\>.  What do you think these are?
+5. Run a new container, interactively, from the centos:centos7 base image.  Make "/bin/bash" the command.
+6. Run `top` in the new container.
+7. Detach from the running container.
+8. Run `top` again - can you find the container processes?
+9. Inspect the running container.  What is it's IP Address?  What is it's Hostname?
+10. Stop the running image, and remove it.
+11. Show all of your images.
+12. Tag your grumpycat image (or whatever you called it) with today's date
+13. Remove all the Full Screen Mario images
+14. Remove any images with the name \<none\>.  What do you think these are?
+
+<a name='apx1'></a>
+## Appendix 1: Running Docker on OSX
+
+Right now, Docker runs primarily on Linux systems, but you can run Docker on Apple's OSX operating system using a virtual machine and [VirtualBox](https://www.virtualbox.org/).  Darin London [\(https://github.com/dmlond\)](https://github.com/dmlond) has written a great guide to using Docker on OSX and graciously allowed it to be added to this class: [Running Docker on the Mac OSX](max_osx/README.md)
 
 ---
 
